@@ -51,11 +51,19 @@
 		</dependency>
 
 <!--		Added externally-->
+<!--		<dependency>-->
+<!--			<groupId>mysql</groupId>-->
+<!--			<artifactId>mysql-connector-java</artifactId>-->
+<!--			<version>8.0.28</version> &lt;!&ndash; Or use the latest version &ndash;&gt;-->
+<!--		</dependency>-->
+
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.28</version> <!-- Or use the latest version -->
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.4</version>
 		</dependency>
+
+
 	</dependencies>
 
 	<build>
