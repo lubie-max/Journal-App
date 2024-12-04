@@ -1,6 +1,7 @@
 package dev.lubna.JA.service;
 
 import dev.lubna.JA.model.JournalEntry;
+import dev.lubna.JA.model.User;
 import dev.lubna.JA.repository.JournalEntryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,25 +17,73 @@ public class JournalEntryService {
     private JournalEntryRepo journalEntryRepo;  // Dependency Injection
 
 
-    public  void  saveJournalEntry(JournalEntry journalEntry){
-        journalEntryRepo.save(journalEntry);
+    @Autowired
+    private UserService userService;
+
+
+    public List<JournalEntry> getAllEntries(String username) {
+
+        try {
+            Optional<User> user = userService.getUserByName(username);
+            if (user.isPresent()) {
+                return user.get().getJournalEntries();
+
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
     }
 
-    public List<JournalEntry> getAllEntries(){
-        return journalEntryRepo.findAll();
+
+
+    public String saveJournalEntry(JournalEntry journalEntry , String username) {
+        try {
+            Optional<User> user = userService.getUserByName(username);
+
+            if(user.isPresent()){
+
+//                List<JournalEntry> userJournalEntries = user.get().journalEntries
+                journalEntry.setUser(user.get());
+                user.get().journalEntries.add(journalEntry);
+
+                 journalEntryRepo.save(journalEntry);
+
+
+                 return "Entry is added";
+
+            }
+
+            else {
+                return  "User is not present / invalid entry";
+
+            }
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public Optional<JournalEntry> getEntryById(Long Id){
-        return  journalEntryRepo.findById(Id);
+
+    public Optional<JournalEntry> getEntryById(Long Id) {
+        return journalEntryRepo.findById(Id);
 
     }
 
-    public Optional<JournalEntry> updateById(Long Id){
-        return   journalEntryRepo.findById(Id);
+    public Optional<JournalEntry> updateById(Long Id) {
+        return journalEntryRepo.findById(Id);
     }
 
-    public  void deleteById(Long Id){
-          journalEntryRepo.deleteById(Id);
+    public void deleteById(Long Id) {
+        journalEntryRepo.deleteById(Id);
     }
+
 
 }
+
+

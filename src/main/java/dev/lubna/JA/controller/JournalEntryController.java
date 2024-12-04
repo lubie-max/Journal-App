@@ -1,7 +1,8 @@
 package dev.lubna.JA.controller;
 
-
+import dev.lubna.JA.service.UserService;
 import dev.lubna.JA.model.JournalEntry;
+import dev.lubna.JA.model.User;
 import dev.lubna.JA.service.JournalEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,12 @@ public class JournalEntryController {
     @Autowired
     private JournalEntryService journalEntryService;
 
-    @GetMapping
-    public ResponseEntity<List<JournalEntry> > getJournalEntry(){
+
+    @GetMapping("/{userName}")
+    public ResponseEntity<? > getJournalEntry(@PathVariable String userName){
+
         try {
-            return (ResponseEntity<List<JournalEntry>>) new ResponseEntity<>( journalEntryService.getAllEntries() , HttpStatus.OK);
+            return (ResponseEntity<List<JournalEntry>>) new ResponseEntity<>( journalEntryService.getAllEntries(userName) , HttpStatus.OK);
 
         }
         catch (Exception e){
@@ -28,20 +31,24 @@ public class JournalEntryController {
         }
     }
 
-    @GetMapping("id/{pathId}")
-    public ResponseEntity getEntryById(@PathVariable Long pathId){
-        Optional<JournalEntry> journalEntry = journalEntryService.getEntryById(pathId);
+    @GetMapping("id/{journalId}")
+    public ResponseEntity getEntryById(@PathVariable Long journalId){
+        Optional<JournalEntry> journalEntry = journalEntryService.getEntryById(journalId);
         if (journalEntry.isPresent()){
             return new ResponseEntity(journalEntry , HttpStatus.OK);
         }
         return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    public  ResponseEntity<Boolean> postJournalEntry(@RequestBody JournalEntry entry){
+
+    @PostMapping("/{username}")
+    public  ResponseEntity postJournalEntry(@RequestBody JournalEntry entry , @PathVariable String username){
         try {
-            journalEntryService.saveJournalEntry(entry);
-            return new  ResponseEntity<>(HttpStatus.OK);
+
+           String res =   journalEntryService.saveJournalEntry(entry , username);
+
+
+            return new  ResponseEntity(res, HttpStatus.CREATED);
         }
         catch (Exception e){
              return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -58,7 +65,7 @@ public class JournalEntryController {
                old.setTitle(newEntry.title != null ? newEntry.title : old.title);
                old.setContent(newEntry.content != null ? newEntry.content : old.content );
            }
-           journalEntryService.saveJournalEntry(old);
+//           journalEntryService.saveJournalEntry(old);
            return  new ResponseEntity<>(old , HttpStatus.CREATED)  ;
        }
        catch (Exception e){

@@ -36,7 +36,7 @@ public class JournalEntry {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userid" , nullable = false)
     private  User user ;
 
 

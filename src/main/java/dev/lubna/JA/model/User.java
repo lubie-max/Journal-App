@@ -1,15 +1,19 @@
 package dev.lubna.JA.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 import org.springframework.stereotype.Indexed;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+@NoArgsConstructor
 @Entity
 @Data
+@Getter
+@Setter
 @Table( name = "users", indexes = {
         @Index(name = "username" ,columnList = "username")
 })
@@ -25,6 +29,6 @@ public class User {
     @NonNull
     public  String password ;
 
-    @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-    public List<JournalEntry> journalEntries;
+    @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    public List<JournalEntry> journalEntries = new ArrayList<>();
 }
