@@ -54,10 +54,10 @@ public class JournalEntryController {
     public  ResponseEntity<JournalEntry> updateJournalEntryById(@RequestBody JournalEntry newEntry , @PathVariable Long pathId ){
        try {
            JournalEntry old = journalEntryService.updateById(pathId).orElse(null);
-           if (old != null){
-               old.setTitle(newEntry.title != null ? newEntry.title : old.title);
-               old.setContent(newEntry.content != null ? newEntry.content : old.content );
-           }
+//           if (old != null){
+//               old.setTitle(newEntry.title != null ? newEntry.title : old.title);
+//               old.setContent(newEntry.content != null ? newEntry.content : old.content );
+//           }
            journalEntryService.saveJournalEntry(old);
            return  new ResponseEntity<>(old , HttpStatus.CREATED)  ;
        }

@@ -15,24 +15,25 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "journal")
-public class JournalEntry {
+@AttributeOverride(name = "uuid", column = @Column(name = "jouranal_id", updatable = false, nullable = false))
+public class JournalEntry extends  BaseEntity{
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id ;
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    public Long id ;
 
     @NonNull
     public String title ;
     public String content ;
 
-    @CreationTimestamp
-    @Column(name = "created_at" , updatable = false)
-    public LocalDateTime createdAt ;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    public LocalDateTime updatedAt;
+//    @CreationTimestamp
+//    @Column(name = "created_at" , updatable = false)
+//    public LocalDateTime createdAt ;
+//
+//    @UpdateTimestamp
+//    @Column(name = "updated_at")
+//    public LocalDateTime updatedAt;
 
 
     @ManyToOne
