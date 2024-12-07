@@ -3,6 +3,7 @@ package dev.lubna.JA.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,10 +12,16 @@ import java.util.UUID;
 @MappedSuperclass
 public class BaseEntity {
 
+//    @Id
+//    @GeneratedValue(strategy =  GenerationType.IDENTITY , generator = "uuid2")
+////    @Column(columnDefinition = "UUID")
+//    @Column(name = "id", updatable = false, nullable = false , columnDefinition = "UUID")
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "uuid", updatable = false, nullable = false)
-    private UUID uuid;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", nullable = false, updatable = false)
+    private UUID id ;
 
 
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -17,10 +17,12 @@ public class JournalEntryController {
     @Autowired
     private JournalEntryService journalEntryService;
 
-    @GetMapping
-    public ResponseEntity<List<JournalEntry> > getJournalEntry(){
+    @GetMapping("/{username}")
+    public ResponseEntity<List<JournalEntry> > getJournalEntry(@PathVariable String username){
         try {
-            return (ResponseEntity<List<JournalEntry>>) new ResponseEntity<>( journalEntryService.getAllEntries() , HttpStatus.OK);
+
+            List<JournalEntry>  journalEntries = journalEntryService.getAllEntries(username);
+            return (ResponseEntity<List<JournalEntry>>) new ResponseEntity<>( journalEntries, HttpStatus.OK);
 
         }
         catch (Exception e){
@@ -29,7 +31,7 @@ public class JournalEntryController {
     }
 
     @GetMapping("id/{pathId}")
-    public ResponseEntity getEntryById(@PathVariable Long pathId){
+    public ResponseEntity getEntryById(@PathVariable UUID pathId){
         Optional<JournalEntry> journalEntry = journalEntryService.getEntryById(pathId);
         if (journalEntry.isPresent()){
             return new ResponseEntity(journalEntry , HttpStatus.OK);
@@ -38,10 +40,10 @@ public class JournalEntryController {
     }
 
     @PostMapping
-    public  ResponseEntity<Boolean> postJournalEntry(@RequestBody JournalEntry entry){
+    public  ResponseEntity<?> postJournalEntry(@RequestBody JournalEntry entry){
         try {
-            journalEntryService.saveJournalEntry(entry);
-            return new  ResponseEntity<>(HttpStatus.OK);
+            String res =  journalEntryService.saveJournalEntry(entry);
+            return new  ResponseEntity<>( res, HttpStatus.OK);
         }
         catch (Exception e){
              return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -50,16 +52,12 @@ public class JournalEntryController {
 
     }
 
-    @PutMapping("id/{pathId}")
-    public  ResponseEntity<JournalEntry> updateJournalEntryById(@RequestBody JournalEntry newEntry , @PathVariable Long pathId ){
+    @PutMapping("id/{username}/{journalId}")
+    public  ResponseEntity<?> updateJournalEntryById(@RequestBody JournalEntry newEntry , @PathVariable UUID journalId , String username ){
        try {
-           JournalEntry old = journalEntryService.updateById(pathId).orElse(null);
-//           if (old != null){
-//               old.setTitle(newEntry.title != null ? newEntry.title : old.title);
-//               old.setContent(newEntry.content != null ? newEntry.content : old.content );
-//           }
-           journalEntryService.saveJournalEntry(old);
-           return  new ResponseEntity<>(old , HttpStatus.CREATED)  ;
+
+           Optional<JournalEntry> res = journalEntryService.updateJournalEntry(journalId, username , newEntry);
+           return  new ResponseEntity<>(res , HttpStatus.CREATED)  ;
        }
        catch (Exception e){
            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
@@ -68,7 +66,9 @@ public class JournalEntryController {
     }
 
     @DeleteMapping("id/{pathId}")
-    public String deleteJournalEntryById(@PathVariable Long pathId){
+    public String deleteJournalEntryById(@PathVariable UUID
+
+ pathId){
         journalEntryService.deleteById(pathId);
         return  pathId + "is Deleted !";
     }

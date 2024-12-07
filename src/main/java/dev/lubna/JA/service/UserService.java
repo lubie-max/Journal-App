@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -31,5 +32,39 @@ public class UserService  {
 
     }
 
+
+    public  String  deleteUser(String username){
+
+        Optional<User> user = userRepo.findByUsername(username);
+
+        if (user.isPresent()){
+            userRepo.deleteById(user.get().getId());
+
+            return  "User has been deleted !!";
+        }
+
+        return  "Something went wrong !!";
+    }
+
+
+    public  String updateUser(User user , String username){
+
+        try {
+            Optional<User> isExistingUser = userRepo.findByUsername(username);
+            if (isExistingUser.isPresent()){
+
+                isExistingUser.get().setPassword(user.getPassword());
+//                user.setPassword(user.getPassword());
+                userRepo.save(isExistingUser.get());
+                return "password has been updated !!";
+            }
+            return  "Not a valid user !!";
+        }
+        catch (Exception e){
+          e.printStackTrace();
+        }
+        return  null;
+
+    }
 
 }
