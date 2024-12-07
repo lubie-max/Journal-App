@@ -16,19 +16,59 @@ public class UserService  {
     @Autowired
     public  UserRepo userRepo;
 
+
+
+    public  void  saveUser(User user){
+        userRepo.save(user);
+    }
+
+
+
     public List<User> getAllUsers(){
         return  userRepo.findAll();
     }
 
-    public  String createUser(User user){
+
+    public  boolean createUser(User user){
 
 
         if (userRepo.findByUsername(user.getUsername()).isPresent()){
-            return  "User Already exists";
+            return  false;
         }
 
         userRepo.save(user);
-        return  "User created successfully !" ;
+        return  true;
+
+    }
+
+    public Optional<User> getUserByName(String username){
+        boolean isUserExist = userRepo.findByUsername(username).isPresent();
+
+        if (isUserExist){
+            return   userRepo.findByUsername(username);
+        }
+
+        return null;
+    }
+
+    public  boolean deleteUser(UUID userid){
+
+        try {
+            if (userRepo.existsById(userid)){
+                userRepo.deleteById(userid);
+                return  true ;
+
+            }
+            else {
+                return false;
+            }
+        }
+
+       catch (Exception e){
+            e.printStackTrace();
+           return  false;
+
+       }
 
     }
 
