@@ -39,10 +39,10 @@ public class JournalEntryController {
         return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    public  ResponseEntity<?> postJournalEntry(@RequestBody JournalEntry entry){
+    @PostMapping("/{username}")
+    public  ResponseEntity<?> postJournalEntry(@RequestBody JournalEntry entry , @PathVariable String username){
         try {
-            String res =  journalEntryService.saveJournalEntry(entry);
+            String res =  journalEntryService.saveJournalEntry(entry ,username);
             return new  ResponseEntity<>( res, HttpStatus.OK);
         }
         catch (Exception e){

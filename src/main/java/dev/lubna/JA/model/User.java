@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Indexed;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,6 @@ public class User extends  BaseEntity{
     @NonNull
     public  String password ;
 
-    @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-    public List<JournalEntry> journalEntries;
+    @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL , fetch = FetchType.LAZY , orphanRemoval = true)
+    public List<JournalEntry> journalEntries = new ArrayList<>();
 }

@@ -22,10 +22,35 @@ public class JournalEntryService {
     private UserRepo userRepo ;
 
 
-    public  String  saveJournalEntry(JournalEntry journalEntry){
-        journalEntryRepo.save(journalEntry);
-        return  null;
+    public  String  saveJournalEntry(JournalEntry journalEntry , String username){
+
+        try {
+            Optional<User> userOptional = userRepo.findByUsername(username);
+            if (userOptional.isEmpty() ){
+                return "No such  user in db";
+            }
+
+            User user = userOptional.get();
+            List<JournalEntry> userJournalEntries = user.getJournalEntries();
+
+            userJournalEntries.add(journalEntry);
+            journalEntry.setUser(user);
+            journalEntryRepo.save(journalEntry);
+            userRepo.save(user);
+
+
+            return "Entry created successfully !!";
+
+
+        }
+        catch (Exception e){
+             e.printStackTrace();
+             return  "Something went wrong";
+        }
+
     }
+
+
 
     public List<JournalEntry> getAllEntries(String username){
 
