@@ -41,13 +41,13 @@ public class JournalEntryController {
 
     @PostMapping("/{username}")
     public  ResponseEntity<?> postJournalEntry(@RequestBody JournalEntry entry , @PathVariable String username){
-        try {
-            String res =  journalEntryService.saveJournalEntry(entry ,username);
-            return new  ResponseEntity<>( res, HttpStatus.OK);
-        }
-        catch (Exception e){
-             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+
+            Boolean res =  journalEntryService.saveJournalEntry(entry ,username);
+            if (res){
+                return new  ResponseEntity<>( "Entry is enrolled!", HttpStatus.OK);
+
+            }
+            return  new ResponseEntity<>("Check title if blank or User is valid !" , HttpStatus.BAD_REQUEST);
 
 
     }

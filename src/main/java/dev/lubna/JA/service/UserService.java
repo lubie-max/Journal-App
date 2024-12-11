@@ -4,9 +4,11 @@ import dev.lubna.JA.model.User;
 import dev.lubna.JA.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.SplittableRandom;
 import java.util.UUID;
 
 
@@ -29,9 +31,10 @@ public class UserService  {
     }
 
 
+    // Extra
+
+
     public  boolean createUser(User user){
-
-
         if (userRepo.findByUsername(user.getUsername()).isPresent()){
             return  false;
         }
@@ -41,15 +44,18 @@ public class UserService  {
 
     }
 
-    public Optional<User> getUserByName(String username){
-        boolean isUserExist = userRepo.findByUsername(username).isPresent();
 
-        if (isUserExist){
+    public Optional<User> getUserByName(String username){
+        Optional<User> isUserExist = userRepo.findByUsername(username);
+
+        if (isUserExist.isPresent()){
             return   userRepo.findByUsername(username);
         }
 
-        return null;
+        return Optional.empty();
     }
+
+
 
     public  boolean deleteUser(UUID userid){
 
@@ -73,17 +79,18 @@ public class UserService  {
     }
 
 
-    public  String  deleteUser(String username){
+    @Transactional
+    public  Boolean  deleteUser(String username){
 
         Optional<User> user = userRepo.findByUsername(username);
 
         if (user.isPresent()){
             userRepo.deleteById(user.get().getId());
 
-            return  "User has been deleted !!";
+            return  true;
         }
 
-        return  "Something went wrong !!";
+        return  false;
     }
 
 

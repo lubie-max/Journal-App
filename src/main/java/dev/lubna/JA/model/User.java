@@ -19,11 +19,8 @@ import java.util.UUID;
 @AttributeOverride(name = "id", column = @Column(name = "userid", updatable = false, nullable = false))
 public class User extends  BaseEntity{
 
-//    @Id
-//    @GeneratedValue()
-//    @Column(columnDefinition = "UUID")
-//    public UUID userid;
 
+    @NonNull
     @Column(name = "username" , nullable = false , unique = true)
     public  String username ;
     @NonNull

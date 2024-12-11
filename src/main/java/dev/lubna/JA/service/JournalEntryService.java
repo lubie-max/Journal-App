@@ -6,6 +6,7 @@ import dev.lubna.JA.repository.JournalEntryRepo;
 import dev.lubna.JA.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,30 +23,37 @@ public class JournalEntryService {
     private UserRepo userRepo ;
 
 
-    public  String  saveJournalEntry(JournalEntry journalEntry , String username){
+    @Transactional
+    public  Boolean  saveJournalEntry(JournalEntry journalEntry , String username){
 
         try {
             Optional<User> userOptional = userRepo.findByUsername(username);
             if (userOptional.isEmpty() ){
-                return "No such  user in db";
+                return false;
             }
 
             User user = userOptional.get();
             List<JournalEntry> userJournalEntries = user.getJournalEntries();
 
+            if (journalEntry.title.isBlank() || journalEntry.title.isEmpty()){
+                return  false;
+            }
             userJournalEntries.add(journalEntry);
             journalEntry.setUser(user);
             journalEntryRepo.save(journalEntry);
+//
             userRepo.save(user);
 
 
-            return "Entry created successfully !!";
+            return true;
 
 
         }
         catch (Exception e){
              e.printStackTrace();
-             return  "Something went wrong";
+            throw  e ;
+
+//             return  "Something went wrong";
         }
 
     }
