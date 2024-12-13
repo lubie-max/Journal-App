@@ -19,7 +19,7 @@ import java.util.UUID;
 @AttributeOverride(name = "id", column = @Column(name = "userid", updatable = false, nullable = false))
 public class User extends  BaseEntity{
 
-
+//  Adding User Security
     @NonNull
     @Column(name = "username" , nullable = false , unique = true)
     public  String username ;
