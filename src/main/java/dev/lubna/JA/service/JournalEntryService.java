@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -79,26 +80,25 @@ public class JournalEntryService {
 
 
 
-    public Optional<JournalEntry> updateJournalEntry(UUID id , String username ,JournalEntry newEntry){
+    public Optional<JournalEntry> updateJournalEntry(UUID uuid , String username ,JournalEntry newEntry){
         Optional<User> existingUser = userRepo.findByUsername(username);
         if (existingUser.isEmpty()) {
            return Optional.empty();
         }
 
         User user = existingUser.get();
-        Optional<JournalEntry> oldJournalEntryOptional = user.getJournalEntries().stream().filter(e -> e.getId().equals(id)).findFirst();
+        Optional<JournalEntry> oldJournalEntryOptional = user.getJournalEntries().stream().filter(e -> e.getId().equals(uuid)).findFirst();
 
         if (oldJournalEntryOptional.isEmpty()){
-            System.out.println("journal entry is not found :" + id);
+            System.out.println("journal entry is not found :" + uuid);
             return  Optional.empty();
         }
 
         JournalEntry oldEntry = oldJournalEntryOptional.get();
 
-        if (newEntry.getTitle() != null || !newEntry.getTitle().isBlank()  &&  !newEntry.getContent().isBlank()){
-            oldEntry.setTitle(newEntry.getTitle());
-            oldEntry.setContent(newEntry.getContent());
-        }
+        oldEntry.setTitle(newEntry.getTitle());
+        oldEntry.setContent(newEntry.getContent());
+        oldEntry.setUpdatedAt(LocalDateTime.now());
         journalEntryRepo.save(oldEntry);
 
         return  Optional.of(oldEntry);

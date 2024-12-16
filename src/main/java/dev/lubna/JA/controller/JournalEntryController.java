@@ -53,11 +53,17 @@ public class JournalEntryController {
     }
 
     @PutMapping("id/{username}/{journalId}")
-    public  ResponseEntity<?> updateJournalEntryById(@RequestBody JournalEntry newEntry , @PathVariable UUID journalId , String username ){
+    public  ResponseEntity<?> updateJournalEntryById(@RequestBody JournalEntry newEntry , @PathVariable UUID journalId , @PathVariable String username ){
        try {
 
            Optional<JournalEntry> res = journalEntryService.updateJournalEntry(journalId, username , newEntry);
-           return  new ResponseEntity<>(res , HttpStatus.CREATED)  ;
+
+           if (res.isPresent()){
+               return  new ResponseEntity<>(res , HttpStatus.CREATED)  ;
+
+           }
+           return  new ResponseEntity<>(res , HttpStatus.NOT_MODIFIED)  ;
+
        }
        catch (Exception e){
            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
