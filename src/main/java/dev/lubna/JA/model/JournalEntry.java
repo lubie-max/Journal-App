@@ -4,10 +4,6 @@ package dev.lubna.JA.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 
 @Data
@@ -27,7 +23,7 @@ public class JournalEntry  extends  BaseEntity{
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "userid")
-    private  User user ;
+    private Users user;
 
 
 

@@ -47,7 +47,7 @@ public class JournalEntryController {
                 return new  ResponseEntity<>( "Entry is enrolled!", HttpStatus.OK);
 
             }
-            return  new ResponseEntity<>("Check title if blank or User is valid !" , HttpStatus.BAD_REQUEST);
+            return  new ResponseEntity<>("Check title if blank or Users is valid !" , HttpStatus.BAD_REQUEST);
 
 
     }

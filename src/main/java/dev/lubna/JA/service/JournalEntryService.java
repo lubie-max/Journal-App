@@ -1,7 +1,7 @@
 package dev.lubna.JA.service;
 
 import dev.lubna.JA.model.JournalEntry;
-import dev.lubna.JA.model.User;
+import dev.lubna.JA.model.Users;
 import dev.lubna.JA.repository.JournalEntryRepo;
 import dev.lubna.JA.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +28,12 @@ public class JournalEntryService {
     public  Boolean  saveJournalEntry(JournalEntry journalEntry , String username){
 
         try {
-            Optional<User> userOptional = userRepo.findByUsername(username);
-            if (userOptional.isEmpty() ){
+            Users usersOptional = userRepo.findByUsername(username);
+            if (usersOptional == null ){
                 return false;
             }
 
-            User user = userOptional.get();
+            Users user = usersOptional;
             List<JournalEntry> userJournalEntries = user.getJournalEntries();
 
             if (journalEntry.title.isBlank() || journalEntry.title.isEmpty()){
@@ -63,10 +63,10 @@ public class JournalEntryService {
 
     public List<JournalEntry> getAllEntries(String username){
 
-        Optional<User> user = userRepo.findByUsername(username);
-        if (user.isPresent()){
+        Users users = userRepo.findByUsername(username);
+        if (users != null){
             List<JournalEntry> journalEntries;
-            journalEntries = user.get().getJournalEntries();
+            journalEntries = users.getJournalEntries();
             return journalEntries;
 
         }
@@ -81,13 +81,13 @@ public class JournalEntryService {
 
 
     public Optional<JournalEntry> updateJournalEntry(UUID uuid , String username ,JournalEntry newEntry){
-        Optional<User> existingUser = userRepo.findByUsername(username);
-        if (existingUser.isEmpty()) {
+        Users existingUsers = userRepo.findByUsername(username);
+        if (existingUsers == null) {
            return Optional.empty();
         }
 
-        User user = existingUser.get();
-        Optional<JournalEntry> oldJournalEntryOptional = user.getJournalEntries().stream().filter(e -> e.getId().equals(uuid)).findFirst();
+        Users users = existingUsers;
+        Optional<JournalEntry> oldJournalEntryOptional = users.getJournalEntries().stream().filter(e -> e.getId().equals(uuid)).findFirst();
 
         if (oldJournalEntryOptional.isEmpty()){
             System.out.println("journal entry is not found :" + uuid);
