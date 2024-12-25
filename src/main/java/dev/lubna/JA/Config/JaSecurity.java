@@ -19,7 +19,7 @@ public class JaSecurity {
 
         return  httpS.csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(req -> req
-//                        .requestMatchers("/check").permitAll()
+                        .requestMatchers("/check").permitAll()
 //                        .requestMatchers("/user").authenticated()
                         .requestMatchers("/user/create").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
