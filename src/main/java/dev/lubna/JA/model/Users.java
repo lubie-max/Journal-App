@@ -27,5 +27,5 @@ public class Users extends  BaseEntity{
     @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL , fetch = FetchType.LAZY , orphanRemoval = true)
     public List<JournalEntry> journalEntries = new ArrayList<>();
 
-    public List<String> userRole = new ArrayList<>();
+    public List<String> userRole;
 }
